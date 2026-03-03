@@ -26,7 +26,8 @@ class ApiClient {
 
   static Future<void> _onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    options.headers['Authorization'] = 'Bearer ${ApiEndpoints.apiKey}';
+        options.headers['Authorization'] = 'Bearer ${ApiEndpoints.apiKey}';
+        options.queryParameters = {"token" : ApiEndpoints.apiToken };
 
     return handler.next(options);
   }
