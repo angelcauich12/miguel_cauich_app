@@ -3,8 +3,10 @@ import 'package:dio/dio.dart';
 import 'package:miguel_cauich_app/core/errors/exceptions.dart';
 import 'package:miguel_cauich_app/core/errors/failures.dart';
 import 'package:miguel_cauich_app/features/tasks/data/datasources/tasks_remote_data_source.dart';
+import 'package:miguel_cauich_app/features/tasks/data/models/task_model.dart';
 import 'package:miguel_cauich_app/features/tasks/domain/entities/task_entity.dart';
 import 'package:miguel_cauich_app/features/tasks/domain/repositories/tasks_repository.dart';
+import 'package:miguel_cauich_app/features/tasks/domain/usecases/create_task_usecase.dart';
 
 class TaskRepositoryImpl implements TasksRepository {
   final TasksRemoteDataSource tasksRemoteDataSource;
@@ -12,9 +14,20 @@ class TaskRepositoryImpl implements TasksRepository {
   TaskRepositoryImpl({required this.tasksRemoteDataSource});
 
   @override
-  Future<void> addTask(String title) {
-    // TODO: implement addTask
-    throw UnimplementedError();
+  Future<Either<Failure, TaskEntity>> createTask(
+      CreateTaskParams params) async {
+    try {
+      final response = await tasksRemoteDataSource.createTask(TaskModel.fromEntity(params));
+      return Right(response);
+    } on DioException catch (e) {
+      final networkException = NetworkException.fromDioError(e);
+      return Left(NetworkFailure(message: networkException.message));
+    } on ServerException {
+      return const Left(ServerFailure(message: "Server error occurred"));
+    } catch (e) {
+      print(e);
+      return Left(ServerFailure(message: "Unexpected error :$e"));
+    }
   }
 
   @override
@@ -41,7 +54,7 @@ class TaskRepositoryImpl implements TasksRepository {
       return const Left(ServerFailure(message: "Server error occurred"));
     } catch (e) {
       print(e);
-      return  Left(ServerFailure(message: "Unexpected error :$e"));
+      return Left(ServerFailure(message: "Unexpected error :$e"));
     }
   }
 

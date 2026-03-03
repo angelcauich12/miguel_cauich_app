@@ -6,7 +6,6 @@ import 'package:miguel_cauich_app/config/theme/app_spacing.dart';
 import 'app_colors.dart';
 import 'app_typography.dart';
 
-
 class AppTheme {
   static ThemeData get light {
     return ThemeData(
@@ -205,13 +204,19 @@ class AppTheme {
           if (states.contains(MaterialState.selected)) {
             return AppColors.primary;
           }
-          return AppColors.gray300;
+          return AppColors.outline;
         }),
         trackColor: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.selected)) {
-            return AppColors.primaryLight;
+            return AppColors.primary.withOpacity(0.5);
           }
-          return AppColors.gray300;
+          return AppColors.outline.withOpacity(0.3);
+        }),
+        trackOutlineColor: MaterialStateProperty.resolveWith((states) {
+          if (states.contains(MaterialState.selected)) {
+            return AppColors.primary;
+          }
+          return AppColors.outline;
         }),
       ),
 
@@ -227,9 +232,7 @@ class AppTheme {
         size: 24,
       ),
 
-
       fontFamily: GoogleFonts.poppins().fontFamily,
     );
   }
 }
-

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:miguel_cauich_app/config/router/routes.dart';
 import 'package:miguel_cauich_app/features/tasks/presentation/widgets/tasks_list.dart';
 import 'package:provider/provider.dart';
 import 'package:miguel_cauich_app/features/tasks/presentation/provider/task_provider.dart';
@@ -61,9 +63,7 @@ class _TasksPageState extends State<TasksPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Navegar a pantalla de crear tarea
-        },
+        onPressed: () => context.push(Routes.createUpdateTask),
         child: const Icon(Icons.add),
       ),
     );

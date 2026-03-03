@@ -5,12 +5,7 @@ import '../models/task_model.dart';
 
 abstract class TasksRemoteDataSource {
   Future<List<TaskModel>> getTasks();
-
-  // Future<List<String>> fetchTasks() async {
-  //   // Simulate a network call to fetch tasks
-  //   await Future.delayed(Duration(seconds: 2));
-  //   return ['Task 1', 'Task 2', 'Task 3'];
-  // }
+  Future<TaskModel> createTask(TaskModel taskModel);
 }
 
 class TasksRemoteDataSourceImpl extends TasksRemoteDataSource {
@@ -29,5 +24,20 @@ class TasksRemoteDataSourceImpl extends TasksRemoteDataSource {
     }
 
     return [];
+  }
+
+  @override
+  Future<TaskModel> createTask(TaskModel taskModel) async {
+    final response = await dio.post(
+      ApiEndpoints.tasks,
+      data: taskModel.toMap(),
+      options: Options(
+        contentType: Headers.formUrlEncodedContentType,
+      ),
+    );
+
+    print(taskModel.toMap());
+
+    return TaskModel.fromMap(response.data['task']);
   }
 }
