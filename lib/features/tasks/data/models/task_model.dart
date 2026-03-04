@@ -28,9 +28,9 @@ class TaskModel extends TaskEntity {
         tags: json["tags"],
       );
 
-  factory TaskModel.fromEntity(CreateTaskParams params) {
+  factory TaskModel.fromEntity(CreateUpdateTaskParams params) {
     return TaskModel(
-      id: -1,
+      id: params.id ?? -1,
       title: params.title,
       isCompleted: params.isCompleted,
       description: params.description,

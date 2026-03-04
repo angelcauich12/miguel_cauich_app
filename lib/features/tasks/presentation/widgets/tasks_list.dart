@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:miguel_cauich_app/config/router/routes.dart';
 import 'package:miguel_cauich_app/config/theme/app_colors.dart';
 import 'package:miguel_cauich_app/config/theme/app_spacing.dart';
 import 'package:miguel_cauich_app/config/theme/app_typography.dart';
 import 'package:miguel_cauich_app/features/tasks/domain/entities/task_entity.dart';
+import 'package:miguel_cauich_app/features/tasks/presentation/provider/task_provider.dart';
+import 'package:provider/provider.dart';
+
+import '../../../../core/services/snackbar_service.dart';
+import 'build_status_badge.dart';
 
 class TasksList extends StatelessWidget {
   final List<TaskEntity> tasks;
@@ -22,48 +29,89 @@ class TasksList extends StatelessWidget {
         final task = tasks[index];
         return Card(
           child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.md, vertical: AppSpacing.sm),
-            title: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    task.title,
-                    style: AppTypography.buttonLarge,
+              contentPadding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.md, vertical: AppSpacing.sm),
+              title: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      task.title,
+                      style: AppTypography.buttonLarge,
+                    ),
                   ),
-                ),
-                _buildStatusBadge(task.isCompleted),
-              ],
-            ),
-            onTap: () {
-            },
-          ),
+                  BuildStatusBadge(isCompleted: task.isCompleted),
+                ],
+              ),
+              onTap: () {},
+              trailing: PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert),
+                onSelected: (value) {
+                  if (value == 'EDIT') {
+                    context.push(Routes.createUpdateTask, extra: task);
+                    return;
+                  }
+                  _confirmDelete(context, task);
+                },
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    value: 'EDIT',
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.edit,
+                        size: 20,
+                        color: AppColors.primary,
+                      ),
+                      title: Text(
+                        'Editar',
+                        style: TextStyle(color: AppColors.primary),
+                      ),
+                    ),
+                  ),
+                  const PopupMenuItem(
+                    value: 'DELETE',
+                    child: ListTile(
+                      leading: Icon(Icons.delete, size: 20),
+                      title: Text(
+                        'Eliminar',
+                      ),
+                    ),
+                  ),
+                ],
+              )),
         );
       },
     );
   }
-}
 
-Widget _buildStatusBadge(bool isCompleted) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-    decoration: BoxDecoration(
-      color: isCompleted
-          ? AppColors.success.withOpacity(0.1)
-          : AppColors.gray600.withOpacity(0.1),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(
-        color: isCompleted ? Colors.green : AppColors.gray500,
-        width: 1,
+  void _confirmDelete(BuildContext context, TaskEntity task) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('¿Eliminar tarea?'),
+        content: Text('Esta acción eliminará "${task.title}" permanentemente.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final readProv = context.read<TaskProvider>();
+              final result = await readProv.deleteTask(task.id);
+              if (!context.mounted) return;
+
+              if (result) {
+                final message = readProv.successTask;
+                SnackbarService.showSuccess(message ?? 'Tarea eliminada');
+              }
+
+              Navigator.pop(context);
+            },
+            child:
+                const Text('Eliminar', style: TextStyle(color: Colors.white)),
+          ),
+        ],
       ),
-    ),
-    child: Text(
-      isCompleted ? 'COMPLETADA' : 'PENDIENTE',
-      style: TextStyle(
-        fontSize: 10,
-        fontWeight: FontWeight.bold,
-        color: isCompleted ? AppColors.successDark : AppColors.gray800,
-      ),
-    ),
-  );
+    );
+  }
 }

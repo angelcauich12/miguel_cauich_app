@@ -100,18 +100,18 @@ class _CreateUpdateTaskFormState extends State<CreateUpdateTaskForm> {
                           ? null
                           : () async {
                               if (_formKey.currentState!.validate()) {
-                                final params = CreateTaskParams(
+                                final params = CreateUpdateTaskParams(
+                                    id: widget.task?.id,
+                                    
                                     title: _titleController.text,
                                     isCompleted: _isCompleted,
                                     comments: _commentsController.text,
                                     description: _descriptionController.text,
                                     tags: _tagsController.text);
 
-                                if (widget.task?.id == null) {
+                                final readProv = context.read<TaskProvider>();
 
-                                  final readProv = context.read<TaskProvider>();
-
-                                  final result = await  readProv.createTask(params);
+                                  final result = await readProv.createupdateTask(widget.task?.id, params);
 
                                   if (!contex.mounted) return;
 
@@ -122,13 +122,13 @@ class _CreateUpdateTaskFormState extends State<CreateUpdateTaskForm> {
                                     return;
                                   }
 
-                                  final error = readProv.taskFailure
-                                      ?.message;
-                                  SnackbarService.showError(
-                                      error ?? 'Error desconocido');
+                                  final error = readProv.taskFailure?.message;
+                                  SnackbarService.showError(error ?? 'Error desconocido');
                                   return;
                                 }
-                              }
+
+
+                          
                             },
                       child: prov.isLoading
                           ? const SizedBox(

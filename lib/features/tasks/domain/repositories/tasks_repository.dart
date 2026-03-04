@@ -4,9 +4,9 @@ import 'package:miguel_cauich_app/features/tasks/domain/entities/task_entity.dar
 import 'package:miguel_cauich_app/features/tasks/domain/usecases/create_task_usecase.dart';
 
 abstract class TasksRepository {
-  Future<Either<Failure, TaskEntity>> createTask(CreateTaskParams params);
-  Future<void> deleteTask(String id);
-  Future<void> updateTask(String id, String title);
   Future<Either<Failure, List<TaskEntity>>> getTasks();
-  Future<Either<Failure, Task>> getTaskById(String id);
+  Future<Either<Failure, TaskEntity>> createTask(CreateUpdateTaskParams params);
+  Future<Either<Failure, TaskEntity>> updateTask(CreateUpdateTaskParams params);
+  Future<Either<Failure, bool>> deleteTask(int taskId);
+  Future<Either<Failure, Task>> getTaskById(int taskId);
 }

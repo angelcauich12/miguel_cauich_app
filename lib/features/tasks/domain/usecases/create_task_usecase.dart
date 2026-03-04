@@ -4,18 +4,20 @@ import 'package:miguel_cauich_app/core/usecases/usecase.dart';
 import 'package:miguel_cauich_app/features/tasks/domain/entities/task_entity.dart';
 import 'package:miguel_cauich_app/features/tasks/domain/repositories/tasks_repository.dart';
 
-class CreateTaskUsecase implements UseCase<TaskEntity, CreateTaskParams> {
+class CreateTaskUsecase implements UseCase<TaskEntity, CreateUpdateTaskParams> {
   final TasksRepository repository;
 
   CreateTaskUsecase({required this.repository});
 
   @override
-  Future<Either<Failure, TaskEntity>> call(CreateTaskParams params) async {
+  Future<Either<Failure, TaskEntity>> call(
+      CreateUpdateTaskParams params) async {
     return await repository.createTask(params);
   }
 }
 
-class CreateTaskParams {
+class CreateUpdateTaskParams {
+  final int? id;
   final String title;
   final bool isCompleted;
   final String? comments;
@@ -23,12 +25,12 @@ class CreateTaskParams {
   final String? tags;
   final DateTime? date;
 
-  CreateTaskParams(
-      {
-      required this.title,
+  CreateUpdateTaskParams(
+      {required this.title,
       required this.isCompleted,
       this.description,
       this.tags,
       this.comments,
-      this.date});
+      this.date,
+      this.id});
 }

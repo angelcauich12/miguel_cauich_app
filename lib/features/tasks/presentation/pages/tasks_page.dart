@@ -54,7 +54,7 @@ class _TasksPageState extends State<TasksPage> {
             return const Center(child: Text('No hay tareas.'));
           }
 
-          return RefreshIndicator(
+          return RefreshIndicator.adaptive(
             onRefresh: () => provider.getTasks(),
             child: TasksList(
               tasks: provider.tasks,

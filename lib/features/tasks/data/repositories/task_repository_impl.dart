@@ -15,9 +15,10 @@ class TaskRepositoryImpl implements TasksRepository {
 
   @override
   Future<Either<Failure, TaskEntity>> createTask(
-      CreateTaskParams params) async {
+      CreateUpdateTaskParams params) async {
     try {
-      final response = await tasksRemoteDataSource.createTask(TaskModel.fromEntity(params));
+      final response =
+          await tasksRemoteDataSource.createTask(TaskModel.fromEntity(params));
       return Right(response);
     } on DioException catch (e) {
       final networkException = NetworkException.fromDioError(e);
@@ -25,21 +26,25 @@ class TaskRepositoryImpl implements TasksRepository {
     } on ServerException {
       return const Left(ServerFailure(message: "Server error occurred"));
     } catch (e) {
-      print(e);
       return Left(ServerFailure(message: "Unexpected error :$e"));
     }
   }
 
   @override
-  Future<void> deleteTask(String id) {
-    // TODO: implement deleteTask
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Either<Failure, Task>> getTaskById(String id) {
-    // TODO: implement getTaskById
-    throw UnimplementedError();
+  Future<Either<Failure, TaskEntity>> updateTask(
+      CreateUpdateTaskParams params) async {
+    try {
+      final response =
+          await tasksRemoteDataSource.updateTask(TaskModel.fromEntity(params));
+      return Right(response);
+    } on DioException catch (e) {
+      final networkException = NetworkException.fromDioError(e);
+      return Left(NetworkFailure(message: networkException.message));
+    } on ServerException {
+      return const Left(ServerFailure(message: "Server error occurred"));
+    } catch (e) {
+      return Left(ServerFailure(message: "Unexpected error :$e"));
+    }
   }
 
   @override
@@ -53,14 +58,28 @@ class TaskRepositoryImpl implements TasksRepository {
     } on ServerException {
       return const Left(ServerFailure(message: "Server error occurred"));
     } catch (e) {
-      print(e);
       return Left(ServerFailure(message: "Unexpected error :$e"));
     }
   }
 
   @override
-  Future<void> updateTask(String id, String title) {
-    // TODO: implement updateTask
+  Future<Either<Failure, bool>> deleteTask(int taskId) async {
+    try {
+      final response = await tasksRemoteDataSource.deleteTask(taskId);
+      return Right(response);
+    } on DioException catch (e) {
+      final networkException = NetworkException.fromDioError(e);
+      return Left(NetworkFailure(message: networkException.message));
+    } on ServerException {
+      return const Left(ServerFailure(message: "Server error occurred"));
+    } catch (e) {
+      return Left(ServerFailure(message: "Unexpected error :$e"));
+    }
+  }
+
+  @override
+  Future<Either<Failure, Task>> getTaskById(taskId) async {
+    // TODO: implement getTaskById
     throw UnimplementedError();
   }
 }

@@ -6,6 +6,9 @@ import '../models/task_model.dart';
 abstract class TasksRemoteDataSource {
   Future<List<TaskModel>> getTasks();
   Future<TaskModel> createTask(TaskModel taskModel);
+  Future<TaskModel> updateTask(TaskModel taskModel);
+  Future<bool> deleteTask(int taskId);
+  Future<TaskModel> getTaskById(int taskId);
 }
 
 class TasksRemoteDataSourceImpl extends TasksRemoteDataSource {
@@ -36,7 +39,40 @@ class TasksRemoteDataSourceImpl extends TasksRemoteDataSource {
       ),
     );
 
-    print(taskModel.toMap());
+    return TaskModel.fromMap(response.data['task']);
+  }
+
+  @override
+  Future<TaskModel> updateTask(TaskModel taskModel) async {
+    final response = await dio.put(
+      '${ApiEndpoints.tasks}/${taskModel.id}',
+      data: taskModel.toMap(),
+      options: Options(
+        contentType: Headers.formUrlEncodedContentType,
+      ),
+    );
+
+    return TaskModel.fromMap(response.data['task']);
+  }
+
+  @override
+  Future<bool> deleteTask(int taskId) async {
+    final response = await dio.delete(
+      '${ApiEndpoints.tasks}/$taskId',
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return response.data['detail'] != null;
+    }
+
+    return false;
+  }
+
+  @override
+  Future<TaskModel> getTaskById(int taskId) async {
+    final response = await dio.get(
+      '${ApiEndpoints.tasks}/$taskId',
+    );
 
     return TaskModel.fromMap(response.data['task']);
   }

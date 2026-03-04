@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:miguel_cauich_app/config/theme/app_colors.dart';
+import 'package:miguel_cauich_app/config/theme/app_typography.dart';
 
 class SnackbarService {
   static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
@@ -6,7 +8,7 @@ class SnackbarService {
   static void showSuccess(String message) {
     _showSnackbar(
       message: message,
-      backgroundColor: Colors.green,
+      backgroundColor: AppColors.successDark,
       icon: Icons.check_circle_outline,
     );
   }
@@ -14,7 +16,7 @@ class SnackbarService {
   static void showError(String message) {
     _showSnackbar(
       message: message,
-      backgroundColor: Colors.red,
+      backgroundColor: AppColors.errorDark,
       icon: Icons.error_outline,
     );
   }
@@ -54,7 +56,7 @@ class SnackbarService {
             Expanded(
               child: Text(
                 message,
-                style: const TextStyle(color: Colors.white, fontFamily: 'Regular'),
+                style: AppTypography.bodyMedium.copyWith(color: AppColors.surface),
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
               ),
