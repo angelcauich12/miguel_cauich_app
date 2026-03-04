@@ -34,7 +34,6 @@ class ApiClient {
 
   static Future<void> _onResponse(
       Response<dynamic> response, ResponseInterceptorHandler handler) async {
-    print('Body: ${response.data}');
     return handler.next(response);
   }
 

@@ -56,7 +56,6 @@ class InputValidators {
     return null;
   }
 
-  /// Valida formato de teléfono internacional básico
   static String? validatePhone(String? value) {
     if (value == null || value.isEmpty) {
       return 'El teléfono es obligatorio';
@@ -154,7 +153,6 @@ class InputValidators {
     return null;
   }
 
-  /// Validación de usuario (puede ser email o username)
   static String? validateUsername(String? value) {
     if (value == null || value.isEmpty) {
       return 'El usuario es obligatorio';

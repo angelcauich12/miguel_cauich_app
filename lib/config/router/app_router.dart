@@ -11,11 +11,11 @@ class AppRouter {
         routes: [
           GoRoute(
               path: Routes.splash,
-              name: 'splash',
+              name: RouteNames.splash,
               builder: (context, state) => const TasksPage()),
           GoRoute(
               path: Routes.createUpdateTask,
-              name: 'create_update_task',
+              name: RouteNames.createUpdateTask,
               builder: (context, state) {
                 final task = state.extra as TaskEntity?;
                 return CreateUpdateTaskPage(

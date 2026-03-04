@@ -5,5 +5,7 @@ class Routes {
 }
 
 class RouteNames {
+  static const String splash = 'splash';
+  static const String createUpdateTask = 'create_update_task';
   static const String taskDetail = 'task_detail';
 }

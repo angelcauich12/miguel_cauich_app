@@ -9,7 +9,6 @@ class AppSpacing {
   static const double xl = 32.0;
   static const double xxl = 48.0;
 
-  // Alias para mayor claridad
   static const double extraSmall = xs;
   static const double small = sm;
   static const double medium = md;
@@ -25,7 +24,6 @@ class AppSpacing {
   static const double radiusXl = 24.0;
   static const double radiusFull = 9999.0;
 
-  // Common radius
   static const Radius radiusSmallTopLeft = Radius.circular(radiusSm);
   static const Radius radiusSmallTopRight = Radius.circular(radiusSm);
   static const Radius radiusSmallBottomLeft = Radius.circular(radiusSm);
@@ -58,7 +56,6 @@ class AppSpacing {
   static const List<BoxShadow> shadowsMedium = [shadowMedium];
   static const List<BoxShadow> shadowsLarge = [shadowLarge];
 
-  // Edge insets (common padding combinations)
   static const EdgeInsets paddingXs = EdgeInsets.all(xs);
   static const EdgeInsets paddingSm = EdgeInsets.all(sm);
   static const EdgeInsets paddingMd = EdgeInsets.all(md);
@@ -81,7 +78,7 @@ class AppSpacing {
   static const EdgeInsets paddingVerticalLg =
       EdgeInsets.symmetric(vertical: lg);
 
-  // Common spacing values
+
   static const SizedBox spacingXs = SizedBox(height: xs);
   static const SizedBox spacingSm = SizedBox(height: sm);
   static const SizedBox spacingMd = SizedBox(height: md);
