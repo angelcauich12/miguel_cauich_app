@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:miguel_cauich_app/config/router/routes.dart';
-import 'package:miguel_cauich_app/config/theme/app_colors.dart';
 import 'package:miguel_cauich_app/config/theme/app_spacing.dart';
 import 'package:miguel_cauich_app/config/theme/app_typography.dart';
 import 'package:miguel_cauich_app/features/tasks/domain/entities/task_entity.dart';
