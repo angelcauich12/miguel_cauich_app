@@ -42,31 +42,16 @@ class TasksList extends StatelessWidget {
                   BuildStatusBadge(isCompleted: task.isCompleted),
                 ],
               ),
-              onTap: () {},
+              onTap: () => context.pushNamed(
+                    RouteNames.taskDetail,
+                    pathParameters: {'id': task.id.toString()},
+                  ),
               trailing: PopupMenuButton<String>(
                 icon: const Icon(Icons.more_vert),
                 onSelected: (value) {
-                  if (value == 'EDIT') {
-                    context.push(Routes.createUpdateTask, extra: task);
-                    return;
-                  }
-                  _confirmDelete(context, task);
+                  if (value == 'DELETE') _confirmDelete(context, task);
                 },
                 itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'EDIT',
-                    child: ListTile(
-                      leading: Icon(
-                        Icons.edit,
-                        size: 20,
-                        color: AppColors.primary,
-                      ),
-                      title: Text(
-                        'Editar',
-                        style: TextStyle(color: AppColors.primary),
-                      ),
-                    ),
-                  ),
                   const PopupMenuItem(
                     value: 'DELETE',
                     child: ListTile(
@@ -86,32 +71,39 @@ class TasksList extends StatelessWidget {
   void _confirmDelete(BuildContext context, TaskEntity task) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('¿Eliminar tarea?'),
-        content: Text('Esta acción eliminará "${task.title}" permanentemente.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              final readProv = context.read<TaskProvider>();
-              final result = await readProv.deleteTask(task.id);
-              if (!context.mounted) return;
+      barrierDismissible: false,
+      builder: (context) => Consumer<TaskProvider>(
+          builder: (context, prov, _) => AlertDialog(
+                title: const Text('¿Eliminar tarea?'),
+                content: Text(
+                    'Esta acción eliminará "${task.title}" permanentemente.'),
+                actions: [
+                  TextButton(
+                    onPressed:
+                        prov.isLoading ? null : () => Navigator.pop(context),
+                    child: const Text('Cancelar'),
+                  ),
+                  ElevatedButton(
+                    onPressed: prov.isLoading
+                        ? null
+                        : () async {
+                            final readProv = context.read<TaskProvider>();
+                            final result = await readProv.deleteTask(task.id);
+                            if (!context.mounted) return;
 
-              if (result) {
-                final message = readProv.successTask;
-                SnackbarService.showSuccess(message ?? 'Tarea eliminada');
-              }
+                            if (result) {
+                              final message = readProv.successTask;
+                              SnackbarService.showSuccess(
+                                  message ?? 'Tarea eliminada');
+                            }
 
-              Navigator.pop(context);
-            },
-            child:
-                const Text('Eliminar', style: TextStyle(color: Colors.white)),
-          ),
-        ],
-      ),
+                            Navigator.pop(context);
+                          },
+                    child: Text(prov.isLoading ? 'Eliminando...' : 'Eliminar',
+                        style: const TextStyle(color: Colors.white)),
+                  ),
+                ],
+              )),
     );
   }
 }

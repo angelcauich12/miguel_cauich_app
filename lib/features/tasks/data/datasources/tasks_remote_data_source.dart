@@ -74,6 +74,6 @@ class TasksRemoteDataSourceImpl extends TasksRemoteDataSource {
       '${ApiEndpoints.tasks}/$taskId',
     );
 
-    return TaskModel.fromMap(response.data['task']);
+    return TaskModel.fromMap(response.data[0]);
   }
 }

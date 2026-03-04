@@ -27,7 +27,7 @@ class _TasksPageState extends State<TasksPage> {
       appBar: AppBar(title: const Text('Tasks')),
       body: Consumer<TaskProvider>(
         builder: (context, provider, child) {
-          if (provider.isLoading) {
+          if (provider.isLoadingTasks) {
             return const Center(child: CircularProgressIndicator.adaptive());
           }
 

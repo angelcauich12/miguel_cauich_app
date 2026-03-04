@@ -8,5 +8,5 @@ abstract class TasksRepository {
   Future<Either<Failure, TaskEntity>> createTask(CreateUpdateTaskParams params);
   Future<Either<Failure, TaskEntity>> updateTask(CreateUpdateTaskParams params);
   Future<Either<Failure, bool>> deleteTask(int taskId);
-  Future<Either<Failure, Task>> getTaskById(int taskId);
+  Future<Either<Failure, TaskEntity>> getTaskById(int taskId);
 }

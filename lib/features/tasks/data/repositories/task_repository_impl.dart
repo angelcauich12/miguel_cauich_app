@@ -78,8 +78,17 @@ class TaskRepositoryImpl implements TasksRepository {
   }
 
   @override
-  Future<Either<Failure, Task>> getTaskById(taskId) async {
-    // TODO: implement getTaskById
-    throw UnimplementedError();
+  Future<Either<Failure, TaskEntity>> getTaskById(taskId) async {
+    try {
+      final response = await tasksRemoteDataSource.getTaskById(taskId);
+      return Right(response);
+    } on DioException catch (e) {
+      final networkException = NetworkException.fromDioError(e);
+      return Left(NetworkFailure(message: networkException.message));
+    } on ServerException {
+      return const Left(ServerFailure(message: "Server error occurred"));
+    } catch (e) {
+      return Left(ServerFailure(message: "Unexpected error :$e"));
+    }
   }
 }

@@ -5,6 +5,7 @@ import 'package:miguel_cauich_app/features/tasks/data/repositories/task_reposito
 import 'package:miguel_cauich_app/features/tasks/domain/repositories/tasks_repository.dart';
 import 'package:miguel_cauich_app/features/tasks/domain/usecases/create_task_usecase.dart';
 import 'package:miguel_cauich_app/features/tasks/domain/usecases/delete_task_usecase.dart';
+import 'package:miguel_cauich_app/features/tasks/domain/usecases/get_task_detail_usecase.dart';
 import 'package:miguel_cauich_app/features/tasks/domain/usecases/get_tasks_usesace.dart';
 import 'package:miguel_cauich_app/features/tasks/domain/usecases/update_task_usecase.dart';
 import 'package:miguel_cauich_app/features/tasks/presentation/provider/task_provider.dart';
@@ -17,20 +18,20 @@ Future<void> initDependencies() async {
   ApiClient.setup();
   sl.registerLazySingleton<Dio>(() => ApiClient.instance);
 
-  sl.registerLazySingleton<TasksRemoteDataSource>(
-      () => TasksRemoteDataSourceImpl(dio: sl()));
-  sl.registerLazySingleton<TasksRepository>(
-      () => TaskRepositoryImpl(tasksRemoteDataSource: sl()));
+  sl.registerLazySingleton<TasksRemoteDataSource>(() => TasksRemoteDataSourceImpl(dio: sl()));
+  sl.registerLazySingleton<TasksRepository>(() => TaskRepositoryImpl(tasksRemoteDataSource: sl()));
 
   sl.registerLazySingleton(() => GetTasksUsesace(repository: sl()));
   sl.registerLazySingleton(() => CreateTaskUsecase(repository: sl()));
   sl.registerLazySingleton(() => UpdateTaskUsecase(repository: sl()));
   sl.registerLazySingleton(() => DeleteTaskUsecase(repository: sl()));
+  sl.registerLazySingleton(() => GetTaskDetailUsecase(repository: sl()));
 
   sl.registerFactory(() => TaskProvider(
     getTasksUsesace: sl(),
     createTaskUsecase: sl(),
     updateTaskUsecase: sl(),
-    deleteTaskUsecase: sl()
+    deleteTaskUsecase: sl(),
+    getTaskDetailUsecase: sl()
     ));
 }
